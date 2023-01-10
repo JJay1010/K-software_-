@@ -1,1 +1,59 @@
-asdf
+from keras.utils.np_utils import to_categorical
+import matplotlib.pyplot as plt
+import numpy as np
+import glob
+
+# 이미지 불러오기
+import PIL
+import cv2
+
+# 데이터 불러오기
+import pandas as pd
+df_csv = pd.read_csv('/content/sample_data/bee_data.csv') #df = datafile
+'''
+import os
+img_dir = os.path.join('/content/sample_data', 'bee_imgs', 'bee_imgs')
+def to_file_path(file_name):
+    return os.path.join(img_dir, file_name)
+'''
+
+# 데이터 분류하기
+from sklearn.model_selection import train_test_split
+'''
+keys = df_csv.keys
+print('datasets keys', keys)
+
+col = df_csv.columns
+Index(['file', 'date', 'time', 'location', 'zip code', 'subspecies', 'health', 'pollen_carrying', 'caste'], dtype='object')
+'''
+
+# 종속변수, 독립변수 나누기
+from sklearn.preprocessing import LabelEncoder
+
+X_data = df_csv.drop(['health'], axis=1)
+Y_data = df_csv['health']
+
+# Y의 문자열을 숫자로 인코딩
+encoder = LabelEncoder()
+encoder.fit(Y_data)
+labels = encoder.transform(Y_data)
+enlabels = pd.DataFrame(labels, columns = ['health'])
+
+# 테스트범위, 훈련범위 나누기
+train_X, test_X, train_Y, test_Y= train_test_split(X_data, enlabels, test_size=0.33, random_state=100)
+
+
+print(train_X)
+#모델 만들기
+from keras.models import Sequential, Model
+from keras.layers import Dense, Input, Flatten, Activation
+from keras.utils import plot_model, np_utils
+
+model = Sequential([Input(shape=(28,28), name='Input'),
+                    Dense(300, activation='relu', name='Dense1'),
+                    Dense(100, activation='relu', name='Dense2'),
+                    Dense(10, activation='softmax', name='Output')])
+
+model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
+
+#hist = model.fit(train_X, train_Y, epochs=5, batch_size=32)
