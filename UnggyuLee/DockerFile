@@ -1,0 +1,7 @@
+FROM tensorflow/tensorflow:2.2.0-gpu
+MAINTAINER UnggyuLee
+RUN pip3 install jupyter
+RUN pip3 install pillow
+RUN pip3 install numpy
+RUN pip3 install pandas
+RUN pip3 install keras
