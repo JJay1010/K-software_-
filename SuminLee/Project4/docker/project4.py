@@ -1,4 +1,6 @@
+#모델 생성만 있는 파일을 도커에 포함하였습니다.
 #VGG net
+
 import tensorflow as tf
 from keras.layers import BatchNormalization, Dropout, Activation
 
